@@ -1,0 +1,29 @@
+{
+  "name": "@makecrypto/makepay-modal",
+  "version": "1.0.0",
+  "description": "Configurable browser modal for MakePay payment links and donations.",
+  "license": "MIT",
+  "main": "dist/makepay.min.js",
+  "unpkg": "dist/makepay.min.js",
+  "jsdelivr": "dist/makepay.min.js",
+  "files": ["dist", "README.md", "LICENSE"],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test",
+    "check": "npm run build && npm test && node scripts/check-generated.mjs",
+    "prepublishOnly": "npm run check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/makepay-io/makepay-modal.git"
+  },
+  "homepage": "https://github.com/makepay-io/makepay-modal#readme",
+  "bugs": { "url": "https://github.com/makepay-io/makepay-modal/issues" },
+  "keywords": ["makepay", "crypto", "payments", "payment-links", "modal", "embed"],
+  "engines": { "node": ">=18" },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "terser": "^5.44.0"
+  },
+  "publishConfig": { "access": "public", "provenance": false }
+}
