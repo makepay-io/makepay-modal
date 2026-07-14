@@ -22,7 +22,7 @@
   "keywords": ["makepay", "crypto", "payments", "payment-links", "modal", "embed"],
   "engines": { "node": ">=18" },
   "devDependencies": {
-    "jsdom": "^26.1.0",
+    "jsdom": "^29.1.1",
     "terser": "^5.44.0"
   },
   "publishConfig": { "access": "public", "provenance": false }
