@@ -17,6 +17,7 @@
   var iframe = null;
   var showing = false;
   var previousOverflow = "";
+  var activeOptions = null;
   var onModalWillEnterMethod = function () {};
   var onModalWillLeaveMethod = function () {};
   var onModalReceiveMessageMethod = function () {};
@@ -56,6 +57,12 @@
     }
   }
 
+  function readScriptConfiguration() {
+    var script = document.currentScript || document.querySelector("script[data-api-url-prefix]");
+    var configuredPrefix = script && script.getAttribute("data-api-url-prefix");
+    if (configuredPrefix) apiUrlPrefix = normalizeApiUrlPrefix(configuredPrefix);
+  }
+
   function ensureFrame() {
     if (iframe) return iframe;
     iframe = document.createElement("iframe");
@@ -84,6 +91,7 @@
     iframe.src = "about:blank";
     document.body.style.overflow = previousOverflow;
     showing = false;
+    activeOptions = null;
   }
 
   function checkoutUrl(path, options) {
@@ -103,6 +111,7 @@
     var frame = ensureFrame();
     if (!frame.parentNode) document.body.appendChild(frame);
     frame.src = checkoutUrl("/embed/payment/" + encodeURIComponent(String(uid).trim()), options);
+    activeOptions = options || null;
     showing = true;
     return frame;
   }
@@ -117,12 +126,20 @@
     var frame = ensureFrame();
     if (!frame.parentNode) document.body.appendChild(frame);
     frame.src = checkoutUrl("/embed/donations/" + encodeURIComponent(String(slug).trim()), options);
+    activeOptions = options || null;
     showFrame();
   }
 
   function receiveMessage(event) {
     if (!showing || !apiUrlPrefix || event.origin !== new URL(apiUrlPrefix).origin) return;
     var data = event.data;
+    if (data && data.source === "makepay" && typeof data.type === "string") {
+      var detail = data.payload || null;
+      if (activeOptions && typeof activeOptions.onEvent === "function") {
+        activeOptions.onEvent({ type: data.type, payload: detail });
+      }
+      window.dispatchEvent(new CustomEvent(data.type, { detail: detail }));
+    }
     if (data === "close" || data && data.source === "makepay" && data.type === "makepay.close_requested") {
       hideFrame();
     }
@@ -137,12 +154,15 @@
       var slug = target.getAttribute("data-makepay-donation-slug");
       if (!uid && !slug) return;
       event.preventDefault();
-      if (uid) showPayment(uid); else showDonation(slug);
+      var viewType = target.getAttribute("data-makepay-view-type");
+      var options = viewType ? { viewType: viewType } : undefined;
+      if (uid) showPayment(uid, options); else showDonation(slug, options);
     });
   }
 
   window.addEventListener("message", receiveMessage, false);
   setButtonListeners();
+  readScriptConfiguration();
 
   window.makepay = {
     init: configure,

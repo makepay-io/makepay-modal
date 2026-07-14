@@ -1,6 +1,6 @@
 {
   "name": "@makecrypto/makepay-modal",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Configurable browser modal for MakePay payment links and donations.",
   "license": "MIT",
   "main": "dist/makepay.min.js",
