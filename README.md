@@ -4,7 +4,7 @@ A small, domain-neutral browser embed for MakePay payment links and donations. T
 
 ```html
 <script
-  src="https://unpkg.com/@makecrypto/makepay-modal@1.1.0/dist/makepay.min.js"
+  src="https://unpkg.com/@makecrypto/makepay-modal@latest/dist/makepay.min.js"
   data-api-url-prefix="https://your-checkout-host.example"
 ></script>
 <button data-makepay-payment-link="PAYMENT_UID">Pay</button>
@@ -49,4 +49,4 @@ Available methods include `showPayment`, `showDonation`, `showFrame`, `hideFrame
 
 ## Security model
 
-The package contains no default checkout domain. It accepts lifecycle messages only from the exact origin configured through `data-api-url-prefix` or the programmatic API. Pin an explicit package version in production.
+The package contains no default checkout domain. It accepts lifecycle messages only from the exact origin configured through `data-api-url-prefix` or the programmatic API. The `@latest` URL follows the npm `latest` tag so merchants receive new modal releases without changing their embed code.
