@@ -11,3 +11,42 @@ A small, domain-neutral browser embed for MakePay payment links and donations. T
 ```
 
 No initialization call is required when `data-api-url-prefix` is present. Advanced integrations can also call `makepay.init`, `makepay.showPayment`, `makepay.showDonation`, `makepay.hideFrame`, or `makepay.setApiUrlPrefix`.
+
+## Payment button
+
+Create a payment link, copy its UID, and place it in `data-makepay-payment-link`:
+
+```html
+<button type="button" data-makepay-payment-link="PAYMENT_UID">
+  Pay with crypto
+</button>
+```
+
+Use `data-makepay-view-type="minimal"` for compact checkout. The default is the full checkout.
+
+## Donation button
+
+```html
+<button type="button" data-makepay-donation-slug="DONATION_SLUG">
+  Donate with crypto
+</button>
+```
+
+## JavaScript API
+
+```js
+makepay.showPayment("PAYMENT_UID", {
+  viewType: "minimal",
+  onEvent(event) {
+    if (event.type === "makepay.payment.status") {
+      console.log(event.payload);
+    }
+  },
+});
+```
+
+Available methods include `showPayment`, `showDonation`, `showFrame`, `hideFrame`, `init`, `configure`, and `setApiUrlPrefix`.
+
+## Security model
+
+The package contains no default checkout domain. It accepts lifecycle messages only from the exact origin configured through `data-api-url-prefix` or the programmatic API. Pin an explicit package version in production.
